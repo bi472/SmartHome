@@ -32,7 +32,6 @@ public class Weather extends AppCompatActivity {
                     .commit();
         }
     }
-    git config --global user.email "you@example.com"
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.weather_menu, menu);
