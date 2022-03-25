@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<camerahistory xmlns:android="http://schemas.android.com/apk/res/android">
+    <record id_camera="1" id_user="1" time_history="12:03"/>
+    <record id_camera="2" id_user="2" time_history="15:03"/>
+    <record id_camera="3" id_user="3" time_history="22:03"/>
+</camerahistory>

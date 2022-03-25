@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<counters xmlns:android="http://schemas.android.com/apk/res/android">
+    <record counter_name = "Газ" data = "12323456" time_counter = "12:03"/>
+    <record counter_name = "Вода" data = "12323456" time_counter = "15:03"/>
+    <record counter_name = "Электричество" data = "12323456" time_counter = "16:03"/>
+</counters>

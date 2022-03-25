@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<users xmlns:android="http://schemas.android.com/apk/res/android">
+    <record name_user="Alexey" password="123"/>
+    <record name_user="Anatoliy" password="123"/>
+    <record name_user="Dasha" password="123"/>
+</users>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<switches xmlns:android="http://schemas.android.com/apk/res/android">
+    <record name_switch="Kitchen" condition="on"/>
+    <record name_switch="Living" condition="off"/>
+    <record name_switch="Bathroom" condition="on"/>
+    <record name_switch="Lobby" condition="on"/>
+    <record name_switch="Toilet" condition="off"/>
+</switches>
