@@ -11,12 +11,15 @@ public class CityPreference {
     }
 
     // Значение по умолчанию если пользователь не указал город
-    String getCity(){
-        return prefs.getString("city", "Saint Petersburg");
+    String getLat() { return prefs.getString("Latitude", "30,5");};
+    String getLon() {return prefs.getString("Longitude", "60,5");};
+
+    void setLat(String Lat){
+        prefs.edit().putString("Latitude", Lat).commit();
     }
 
-    void setCity(String city){
-        prefs.edit().putString("city", city).commit();
+    void setLon(String Lon){
+        prefs.edit().putString("Longitude", Lon).commit();
     }
 
 }

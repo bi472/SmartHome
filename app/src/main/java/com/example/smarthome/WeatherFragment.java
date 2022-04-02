@@ -1,6 +1,12 @@
 package com.example.smarthome;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.Manifest;
 import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +15,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
@@ -17,6 +28,7 @@ import android.os.Handler;
 import java.text.DateFormat;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class WeatherFragment extends Fragment {
@@ -29,6 +41,8 @@ public class WeatherFragment extends Fragment {
     TextView weatherIcon;
     // нужен handler для потока
     Handler handler;
+
+    Geocoder geocoder;
 
     public WeatherFragment(){
         handler = new Handler();
@@ -47,20 +61,21 @@ public class WeatherFragment extends Fragment {
         weatherIcon = (TextView)rootView.findViewById(R.id.weather_icon);
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "weathericons-regular-webfont.ttf");
-        updateWeatherData(new CityPreference(getActivity()).getCity());
+        updateWeatherData(new CityPreference(getActivity()).getLat(), new  CityPreference(getActivity()).getLon());
 
         weatherIcon.setTypeface(weatherFont);
+
+
 
         return rootView;
     }
 
-
     // В updateWeatherData, мы запускаем новый поток и вызываем getJSON в классе RemoteFetch, нужен асинхронный поток а не фоновый,
     // вызов Toast или renderWeather прямо из фонового потока приведет к ошибке выполнения
-    private void updateWeatherData(final String city){
+    private void updateWeatherData(final String Lat, final String Lon){
         new Thread(){
             public void run(){
-                final JSONObject json = RemoteFetch.getJSON(getActivity(), city);
+                final JSONObject json = RemoteFetch.getJSON(getActivity(), Lat, Lon);
                 if(json == null){
                     handler.post(new Runnable(){
                         public void run(){
@@ -72,7 +87,7 @@ public class WeatherFragment extends Fragment {
                 } else {
                     handler.post(new Runnable(){
                         public void run(){
-                            renderWeather(json);
+                            renderWeather(json, Lat, Lon);
                         }
                     });
                 }
@@ -81,11 +96,11 @@ public class WeatherFragment extends Fragment {
     }
 
     // Метод renderWeather использует данные JSON для обновления объектов TextView
-    private void renderWeather(JSONObject json){
+    private void renderWeather(JSONObject json, String Lat, String Lon){
         try {
-            cityField.setText(json.getString("name").toUpperCase(Locale.US) +
-                    ", " +
-                    json.getJSONObject("sys").getString("country"));
+            geocoder = new Geocoder(getContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(Lat), Double.parseDouble(Lon), 1);
+            cityField.setText(addresses.get(0).getAddressLine(0));
 
             JSONObject details = json.getJSONArray("weather").getJSONObject(0);
             JSONObject main = json.getJSONObject("main");
@@ -98,7 +113,7 @@ public class WeatherFragment extends Fragment {
                     String.format("%.2f", main.getDouble("temp"))+ " ℃");
 
             DateFormat df = DateFormat.getDateTimeInstance();
-            //Перевод даты в соответсвующий часовой пояс
+            //Перевод даты в соответствующий часовой пояс
             String updatedOn = df.format(new Date(json.getLong("dt")*1000 + json.getLong("timezone")*1000));
             updatedField.setText("Последнее обновление: " + updatedOn);
 
@@ -141,7 +156,7 @@ public class WeatherFragment extends Fragment {
         weatherIcon.setText(icon);
     }
 
-    public void changeCity(String city){
-        updateWeatherData(city);
+    public void changeCity(String Lat, String Lon){
+        updateWeatherData(Lat, Lon);
     }
 }

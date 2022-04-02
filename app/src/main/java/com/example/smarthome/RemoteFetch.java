@@ -12,32 +12,33 @@ import android.util.Log;
 
 public class RemoteFetch {
     private static final String OPEN_WEATHER_MAP_API =
-            "https://api.openweathermap.org/data/2.5/weather?q=%s&appid=d69308a1f9c7b8e150503283dd7ff5d5&units=metric&lang=RU";
+            "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=d69308a1f9c7b8e150503283dd7ff5d5&units=metric&lang=Ru&cnt=1";
 
-    public static JSONObject getJSON(Context context, String city){
+    public static JSONObject getJSON(Context context, String Lat, String Lon){
         try {
-            URL url = new URL(String.format(OPEN_WEATHER_MAP_API, city));
+            URL url = new URL(String.format(OPEN_WEATHER_MAP_API, Lat, Lon));
             HttpURLConnection connection =
                     (HttpURLConnection)url.openConnection();
+
+            Log.i("------------ Сообщение:" , url.toString());
+
             //Читаем данные
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(connection.getInputStream()));
 
-            StringBuffer json = new StringBuffer(1024);
+            StringBuffer json = new StringBuffer(2048);
             String tmp="";
             //Записываем в String
             while((tmp=reader.readLine())!=null)
                 json.append(tmp).append("\n");
             reader.close();
+            Log.i("------------ Сообщение:" , json.toString());
             //Объявление json объекта
             JSONObject data = new JSONObject(json.toString());
 
-            // Если код равен 200, то возврощается null
-            if(data.getInt("cod") != 200){
-                return null;
-            }
             return data;
         }catch(Exception e){
+            Log.i("-------------- Сообщение", e.getMessage());
             return null;
         }
     }
