@@ -3,9 +3,12 @@ package com.example.smarthome;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
@@ -31,8 +34,6 @@ public class Weather extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
-        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION }, 100);
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new WeatherFragment())
@@ -52,32 +53,46 @@ public class Weather extends AppCompatActivity {
                 break;
                 }
             case R.id.update_city:{
-                saveLocation();
+                Log.i("Сообщение", "Нажато меню");
+                checkPermisson();
+                break;
             }
         }
         return false;
     }
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100 && grantResults[0] == RESULT_OK){
-            saveLocation();
+    public void checkPermisson()
+    {
+        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(Weather.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
         }
-        else{
-            Toast.makeText(getApplicationContext(), "Пожалуйста, дайте разрешение.", Toast.LENGTH_LONG);
+        else {
+            getCoordinates();
         }
     }
 
-    public void saveLocation(){
+    private void getCoordinates() {
         GPSTracker g = new GPSTracker(getApplicationContext()); //создаём трекер
         Location l = g.getLocation(); // получаем координаты
         if(l != null){
-            Double lat = l.getLatitude();  // широта
-            Double lon = l.getLongitude(); // долгота
-            Log.i("-----Сообщение: ", lat.toString() + ", "+ lon.toString());
-            changeCity(lat.toString(), lon.toString());
+            double lat = l.getLatitude();  // широта
+            double lon = l.getLongitude(); // долгота
+            Log.i("Сообщение с координатами: ", String.valueOf(lat) + ", "+ String.valueOf(lon));
+            changeCity(String.valueOf(lat), String.valueOf(lon));
         }
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100 && grantResults[0] == RESULT_OK)
+        {
+            getCoordinates();
+        }
+    }
+
+
 
     private void showInputDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

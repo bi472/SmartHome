@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import android.os.Handler;
 
@@ -39,6 +41,8 @@ public class WeatherFragment extends Fragment {
     TextView detailsField;
     TextView currentTemperatureField;
     TextView weatherIcon;
+
+    Button getLocation;
     // нужен handler для потока
     Handler handler;
 
@@ -59,6 +63,7 @@ public class WeatherFragment extends Fragment {
         detailsField = (TextView)rootView.findViewById(R.id.details_field);
         currentTemperatureField = (TextView)rootView.findViewById(R.id.current_temperature_field);
         weatherIcon = (TextView)rootView.findViewById(R.id.weather_icon);
+        getLocation = (Button) rootView.findViewById(R.id.getLocation);
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "weathericons-regular-webfont.ttf");
         updateWeatherData(new CityPreference(getActivity()).getLat(), new  CityPreference(getActivity()).getLon());
@@ -75,8 +80,9 @@ public class WeatherFragment extends Fragment {
     private void updateWeatherData(final String Lat, final String Lon){
         new Thread(){
             public void run(){
-                final JSONObject json = RemoteFetch.getJSON(getActivity(), Lat, Lon);
-                if(json == null){
+                final JSONObject weatherJson = RemoteFetch.getWeatherJSON(getActivity(), Lat, Lon);
+                final JSONObject cityJson = RemoteFetch.getCity(getActivity(), Lat, Lon);
+                if(weatherJson == null){
                     handler.post(new Runnable(){
                         public void run(){
                             Toast.makeText(getActivity(),
@@ -87,7 +93,7 @@ public class WeatherFragment extends Fragment {
                 } else {
                     handler.post(new Runnable(){
                         public void run(){
-                            renderWeather(json, Lat, Lon);
+                            renderWeather(weatherJson,cityJson, Lat, Lon);
                         }
                     });
                 }
@@ -96,12 +102,15 @@ public class WeatherFragment extends Fragment {
     }
 
     // Метод renderWeather использует данные JSON для обновления объектов TextView
-    private void renderWeather(JSONObject json, String Lat, String Lon){
+    private void renderWeather(JSONObject json, JSONObject cityJson, String Lat, String Lon){
         try {
-            geocoder = new Geocoder(getContext(), Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(Lat), Double.parseDouble(Lon), 1);
-            cityField.setText(addresses.get(0).getAddressLine(0));
-
+           if (cityJson.getJSONObject("local_names") != null) {
+                JSONObject localNamesJson = cityJson.getJSONObject("local_names");
+                cityField.setText(localNamesJson.getString("ru") +
+                        ", " + cityJson.getString("country"));
+            }
+            else
+                cityField.setText(cityJson.getString("name"));
             JSONObject details = json.getJSONArray("weather").getJSONObject(0);
             JSONObject main = json.getJSONObject("main");
             detailsField.setText(
@@ -122,7 +131,7 @@ public class WeatherFragment extends Fragment {
                     json.getJSONObject("sys").getLong("sunset") * 1000);
 
         }catch(Exception e){
-            Log.e("Умный дом", "Нет данных в JSON.");
+            Log.e("Умный дом", e.getMessage());
         }
     }
 

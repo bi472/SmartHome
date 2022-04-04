@@ -2,7 +2,7 @@
     <string name="app_name">SmartHome</string>
     <string name="change_city">Изменить город</string>
     <string name="update_city">Обновить город</string>
-    <string name="app_id">d69308a1f9c7b8e150503283dd7ff5d5</string>
+    <string name="WeatherURL">d69308a1f9c7b8e150503283dd7ff5d5</string>
 
     <string name="weather_sunny">&#xf00d;</string>
     <string name="weather_clear_night">&#xf02e;</string>
