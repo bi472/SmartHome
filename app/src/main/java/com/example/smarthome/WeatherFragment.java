@@ -3,6 +3,7 @@ package com.example.smarthome;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -29,7 +30,9 @@ import android.os.Handler;
 
 import java.text.DateFormat;
 import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,12 +44,10 @@ public class WeatherFragment extends Fragment {
     TextView detailsField;
     TextView currentTemperatureField;
     TextView weatherIcon;
-
-    Button getLocation;
+    TextView timeUpdated;
+    TextView feelsLike;
     // нужен handler для потока
     Handler handler;
-
-    Geocoder geocoder;
 
     public WeatherFragment(){
         handler = new Handler();
@@ -63,7 +64,8 @@ public class WeatherFragment extends Fragment {
         detailsField = (TextView)rootView.findViewById(R.id.details_field);
         currentTemperatureField = (TextView)rootView.findViewById(R.id.current_temperature_field);
         weatherIcon = (TextView)rootView.findViewById(R.id.weather_icon);
-        getLocation = (Button) rootView.findViewById(R.id.getLocation);
+        timeUpdated = (TextView)rootView.findViewById(R.id.updated_time);
+        feelsLike = (TextView)rootView.findViewById(R.id.feels_like);
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "weathericons-regular-webfont.ttf");
         updateWeatherData(new CityPreference(getActivity()).getLat(), new  CityPreference(getActivity()).getLon());
@@ -106,25 +108,32 @@ public class WeatherFragment extends Fragment {
         try {
            if (cityJson.getJSONObject("local_names") != null) {
                 JSONObject localNamesJson = cityJson.getJSONObject("local_names");
-                cityField.setText(localNamesJson.getString("ru") +
-                        ", " + cityJson.getString("country"));
+                cityField.setText(localNamesJson.getString("ru"));
             }
             else
                 cityField.setText(cityJson.getString("name"));
             JSONObject details = json.getJSONArray("weather").getJSONObject(0);
             JSONObject main = json.getJSONObject("main");
             detailsField.setText(
-                    details.getString("description").toUpperCase(Locale.US) +
-                            "\n" + "Влажность: " + main.getString("humidity") + "%" +
-                            "\n" + "Давление: " + main.getString("pressure") + " hPa");
+                    details.getString("description").toUpperCase(Locale.US));
 
             currentTemperatureField.setText(
-                    String.format("%.2f", main.getDouble("temp"))+ " ℃");
+                    String.format("%.2f", main.getDouble("temp"))+ "℃"
+            );
+            feelsLike.setText("Ощущается как " +
+                    String.format("%.2f", main.getDouble("feels_like")) + "℃"
+            );
 
             DateFormat df = DateFormat.getDateTimeInstance();
             //Перевод даты в соответствующий часовой пояс
-            String updatedOn = df.format(new Date(json.getLong("dt")*1000 + json.getLong("timezone")*1000));
-            updatedField.setText("Последнее обновление: " + updatedOn);
+            Calendar myCal = new GregorianCalendar();
+            Date updatedOn = new Date(json.getLong("dt")*1000 + json.getLong("timezone")*1000);
+            myCal.setTime(updatedOn);
+
+            updatedField.setText(myCal.get(Calendar.DAY_OF_MONTH) +
+                    " " + myCal.getDisplayName(Calendar.MONTH, Calendar.LONG_FORMAT, new Locale("ru")) +
+                    ", " + myCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG_FORMAT, new Locale("ru")));
+            timeUpdated.setText(myCal.get(Calendar.HOUR_OF_DAY) + ":" + myCal.get(Calendar.MINUTE));
 
             setWeatherIcon(details.getInt("id"),
                     json.getJSONObject("sys").getLong("sunrise") * 1000,

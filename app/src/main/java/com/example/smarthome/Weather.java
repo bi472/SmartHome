@@ -53,7 +53,6 @@ public class Weather extends AppCompatActivity {
                 break;
                 }
             case R.id.update_city:{
-                Log.i("Сообщение", "Нажато меню");
                 checkPermisson();
                 break;
             }

@@ -4,77 +4,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D47A1"
+    android:background="@color/quantum_indigo800"
     tools:context=".Counter">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="408dp"
-        android:layout_height="165dp"
-        android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/radio_gas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="408dp"
+            android:layout_height="165dp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radio_gas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_weight="1"
+                android:text="Счётчик газа"
+                android:textColor="#FFFFFF"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <RadioButton
+                android:id="@+id/radio_electricity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Счётчик электричества"
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radio_water" />
+
+            <RadioButton
+                android:id="@+id/radio_water"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Счётчик воды"
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radio_gas" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/time_tv"
+            android:layout_width="328dp"
+            android:layout_height="54dp"
             android:layout_marginTop="32dp"
-            android:layout_weight="1"
-            android:text="Счётчик газа"
+            android:text="Дата и время последнего сохранения данных:"
             android:textColor="#FFFFFF"
-
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.08"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-        <RadioButton
-            android:id="@+id/radio_electricity"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/data_tv"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Счётчик электричества"
+            android:layout_marginTop="36dp"
+            android:text="Данные счётчика:"
             android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.027"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radio_water" />
-
-        <RadioButton
-            android:id="@+id/radio_water"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Счётчик воды"
-            android:textColor="#FFFFFF"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radio_gas" />
-
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/time_tv"
-        android:layout_width="328dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="32dp"
-        android:text="Дата и время последнего сохранения данных:"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-    <TextView
-        android:id="@+id/data_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="Данные счётчика:"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.027"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/time_tv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
