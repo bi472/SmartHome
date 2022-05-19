@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -11,8 +13,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SmartHome">
-        <activity android:name=".DatabaseEditActivity"></activity>
+        android:theme="@style/Theme.SmartHome"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".DatabaseEditActivity" />
         <activity android:name=".UserCameraHistory" />
         <activity android:name=".VideoCameraHistory" />
         <activity android:name=".LightActivity" />
@@ -28,6 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
 
         <meta-data
             android:name="preloaded_fonts"

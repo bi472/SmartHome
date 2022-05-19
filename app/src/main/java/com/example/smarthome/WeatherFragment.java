@@ -24,11 +24,15 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import android.os.Handler;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,6 +53,12 @@ public class WeatherFragment extends Fragment {
     // нужен handler для потока
     Handler handler;
 
+    MQTTHelper mqttHelper;
+
+    TextView roomTemp;
+    TextView roomHum;
+    TextView roomUpdateTime;
+
     public WeatherFragment(){
         handler = new Handler();
     }
@@ -66,15 +76,62 @@ public class WeatherFragment extends Fragment {
         weatherIcon = (TextView)rootView.findViewById(R.id.weather_icon);
         timeUpdated = (TextView)rootView.findViewById(R.id.updated_time);
         feelsLike = (TextView)rootView.findViewById(R.id.feels_like);
+        roomTemp = (TextView) rootView.findViewById(R.id.temperature_room);
+        roomHum = (TextView) rootView.findViewById(R.id.humidity_room);
+        roomUpdateTime = (TextView) rootView.findViewById(R.id.updated_time_room);
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "weathericons-regular-webfont.ttf");
+
         updateWeatherData(new CityPreference(getActivity()).getLat(), new  CityPreference(getActivity()).getLon());
+        roomTemp.setText("Температура: " + new CityPreference(getActivity()).getTemp() + " ℃");
+        roomHum.setText("Влажность: " + new CityPreference(getActivity()).getHum() + " %");
+        roomUpdateTime.setText("Обновлено в " + new CityPreference(getActivity()).getTime());
 
         weatherIcon.setTypeface(weatherFont);
 
 
+        startMqtt();
+
 
         return rootView;
+    }
+
+    private void startMqtt(){
+        mqttHelper = new MQTTHelper(getActivity());
+        mqttHelper.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean b, String s) {
+
+            }
+
+            @Override
+            public void connectionLost(Throwable throwable) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                Log.w("Debug",mqttMessage.toString());
+                JSONObject roomInfoJson = new JSONObject(mqttMessage.toString());
+                JSONObject localNamesJson = roomInfoJson.getJSONObject("AM2301");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                SimpleDateFormat output = new SimpleDateFormat("HH:mm:ss");
+                Date d = sdf.parse(roomInfoJson.getString("Time"));
+                String time = output.format(d);
+                new CityPreference(getActivity()).setTemp(localNamesJson.getString("Temperature"));
+                new CityPreference(getActivity()).setHum(localNamesJson.getString("Humidity"));
+                new CityPreference(getActivity()).setTime(time);
+                roomTemp.setText("Температура: " + localNamesJson.getString("Temperature") + " ℃");
+                roomHum.setText("Влажность: " + localNamesJson.getString("Humidity") + " %");
+                roomUpdateTime.setText("Обновлено в " + time);
+                Toast.makeText(getActivity(), "Данные о климате в комнате успешно обновлены!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+            }
+        });
     }
 
     // В updateWeatherData, мы запускаем новый поток и вызываем getJSON в классе RemoteFetch, нужен асинхронный поток а не фоновый,
@@ -127,7 +184,7 @@ public class WeatherFragment extends Fragment {
             DateFormat df = DateFormat.getDateTimeInstance();
             //Перевод даты в соответствующий часовой пояс
             Calendar myCal = new GregorianCalendar();
-            Date updatedOn = new Date(json.getLong("dt")*1000 + json.getLong("timezone")*1000);
+            Date updatedOn = new Date(json.getLong("dt")*1000);
             myCal.setTime(updatedOn);
 
             updatedField.setText(myCal.get(Calendar.DAY_OF_MONTH) +

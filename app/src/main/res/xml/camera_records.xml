@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<camera xmlns:android="http://schemas.android.com/apk/res/android">
-    <record name_camera = "Вход 1"/>
-    <record name_camera = "Вход 2"/>
-    <record name_camera = "Вход 3"/>
-</camera>

@@ -9,15 +9,18 @@ import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -29,11 +32,15 @@ import java.util.Date;
 import java.util.Locale;
 
 public class LightMenu extends AppCompatActivity {
-    ArrayList<Room> rooms = new ArrayList();
     final String LOG_TAG = "myLogs";
-    ListView menuList;
     DBHelper dbHelper;
     String check;
+    TextView condition;
+    Button change_condition;
+
+    Handler handler;
+
+    public LightMenu() { handler = new Handler(); }
 
     public boolean queryCheck(String name){
         SQLiteDatabase db = dbHelper.open();
@@ -64,30 +71,38 @@ public class LightMenu extends AppCompatActivity {
 
         dbHelper = new DBHelper(this);
 
-        menuList = (ListView) findViewById(R.id.lightList);
+        condition = findViewById(R.id.light_condition);
+        change_condition = findViewById(R.id.find_light);
 
-        setInitialData(); //инициализация списка
-
-        RoomAdapter foodAdapter = new RoomAdapter(this, R.layout.list_item, rooms); // создание адаптера
-        menuList.setAdapter(foodAdapter); // устанавливаем адаптер
-        menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        change_condition.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
-                                    long id) {
-                Room selectedRoom = (Room) parent.getItemAtPosition(position);
-                Intent intent = new Intent(LightMenu.this, LightActivity.class);
-                intent.putExtra("condition", queryCheck(selectedRoom.getRoom_name()));
-                intent.putExtra("room_name", selectedRoom.getRoom_name());
-                startActivity(intent);
+            public void onClick(View view) {
+                new Thread(){
+                    public void run(){
+                        final JSONObject LightJson = RemoteFetch.getPower(getApplication(), "192.168.0.224", "0");
+                        if(LightJson == null){
+                            handler.post(new Runnable(){
+                                public void run(){
+                                    Toast.makeText(getApplicationContext(),
+                                            "ничё не работает ты думал всё так просто что ли",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } else {
+                            handler.post(new Runnable(){
+                                public void run(){
+                                    try {
+                                        condition.setText(LightJson.getString("POWER"));
+                                    }
+                                    catch (Exception ex){
+                                        Log.e("TAG", ex.getMessage());
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }.start();
             }
         });
-    }
-
-    private void setInitialData() {
-        rooms.add(new Room("Kitchen", R.drawable.kitchen));
-        rooms.add(new Room("Living", R.drawable.gostinaya));
-        rooms.add(new Room("Bathroom", R.drawable.vannaya));
-        rooms.add(new Room("Lobby", R.drawable.prihozhaya));
-        rooms.add(new Room("Toilet", R.drawable.tualet));
     }
 }

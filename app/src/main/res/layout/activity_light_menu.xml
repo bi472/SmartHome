@@ -6,17 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".LightMenu">
 
-    <ListView
-        android:id="@+id/lightList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#0D47A1"
-        tools:layout_editor_absoluteX="11dp"
-        tools:layout_editor_absoluteY="16dp" />
     <TextView
-        android:id = "@+id/CheckView"
-        android:layout_width="match_parent"
-         android:layout_height="match_parent"
-        android:text="123"
-        android:visibility="invisible"/>
+        android:id="@+id/light_condition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="72dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/find_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="161dp"
+        android:layout_marginTop="107dp"
+        android:text="Button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

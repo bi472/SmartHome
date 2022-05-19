@@ -10,14 +10,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:text="Город"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white"
-        android:textSize="35sp"
         android:shadowColor="@color/quantum_black_100"
         android:shadowDx="3"
         android:shadowDy="3"
-        android:shadowRadius="10"/>
+        android:shadowRadius="10"
+        android:text="Город"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white"
+        android:textSize="35sp" />
 
     <TextView
         android:id="@+id/details_field"
@@ -61,6 +61,7 @@
         android:layout_centerInParent="true"
         android:layout_marginTop="-100dp"
         android:layout_marginBottom="-110dp"
+        android:fontFamily=""
         android:textColor="@color/white"
         android:textSize="70sp" />
 
@@ -110,4 +111,64 @@
         android:textColor="@color/white"
         android:textSize="15sp" />
 
+    <TextView
+        android:id="@+id/info_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/updated_time"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="-40dp"
+        android:shadowColor="@color/quantum_black_100"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="10"
+        android:text="Климат в комнате:"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/temperature_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/info_room"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="-20dp"
+        android:shadowColor="@color/quantum_black_100"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="10"
+        android:text="Температура:"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/humidity_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/temperature_room"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="-20dp"
+        android:shadowColor="@color/quantum_black_100"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="10"
+        android:text="Влажность:"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+
+    <TextView
+        android:id="@+id/updated_time_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/humidity_room"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="-40dp"
+        android:shadowColor="@color/quantum_black_100"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="10"
+        android:text="Обновлено в"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 </RelativeLayout>
