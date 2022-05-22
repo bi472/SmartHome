@@ -97,7 +97,7 @@ public class WeatherFragment extends Fragment {
     }
 
     private void startMqtt(){
-        mqttHelper = new MQTTHelper(getActivity());
+        mqttHelper = new MQTTHelper(getActivity(), "connect");
         mqttHelper.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {

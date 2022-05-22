@@ -3,6 +3,8 @@ package com.example.smarthome;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -13,18 +15,20 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.UnsupportedEncodingException;
+
 public class MQTTHelper {
     public MqttAndroidClient mqttAndroidClient;
 
-    final String serverUri = "tcp://srv2.clusterfly.ru:9991";
+    final String serverUri = "tcp://m9.wqtt.ru:12488";
 
     final String clientId = "android";
-    final String subscriptionTopic = "user_e07200b6/tele/relay_with_temp/SENSOR";
-    final String publishTopic = "user_e07200b6/stat/relay_with_temp/POWER = OFF";
-    final String username = "user_e07200b6";
-    final String password = "pass_0f4777af";
+    final String subscriptionTopic = "tele/relay_with_temp/SENSOR";
+    final String publishTopic = "cmnd/relay_with_temp/POWER";
+    final String username = "u_Q8U3S8";
+    final String password = "JPreADjI";
 
-    public MQTTHelper(Context context){
+    public MQTTHelper(Context context, String logic){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -47,16 +51,20 @@ public class MQTTHelper {
 
             }
         });
-        connect();
+        connect(logic);
+
     }
 
     public void setCallback(MqttCallbackExtended callback) {
         mqttAndroidClient.setCallback(callback);
     }
 
+    public void publishMessage(@NonNull MqttAndroidClient client,
+                               @NonNull String msg, int qos, @NonNull String topic)
+            throws MqttException, UnsupportedEncodingException {
+    }
 
-
-    private void connect(){
+    private void connect(String logic){
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
@@ -64,27 +72,38 @@ public class MQTTHelper {
         mqttConnectOptions.setPassword(password.toCharArray());
 
         try {
-            mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
+            if (logic == "connect") {
+                mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
 
-                    DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
-                    disconnectedBufferOptions.setBufferEnabled(true);
-                    disconnectedBufferOptions.setBufferSize(100);
-                    disconnectedBufferOptions.setPersistBuffer(false);
-                    disconnectedBufferOptions.setDeleteOldestMessages(false);
-                    mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
-                    subscribeToTopic(subscriptionTopic);
-                }
+                        DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
+                        disconnectedBufferOptions.setBufferEnabled(true);
+                        disconnectedBufferOptions.setBufferSize(100);
+                        disconnectedBufferOptions.setPersistBuffer(false);
+                        disconnectedBufferOptions.setDeleteOldestMessages(false);
+                        mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
+                        subscribeToTopic(subscriptionTopic);
+                    }
 
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.w("Mqtt", "Failed to connect to: " + serverUri + exception.toString());
-                }
-            });
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        Log.w("Mqtt", "Failed to connect to: " + serverUri + exception.toString());
+                    }
+                });
+            }
+            else if (logic == "publish") {
+                byte[] encodedPayload = new byte[0];
+                String msg = "toggle";
+                encodedPayload = msg.getBytes("UTF-8");
+                MqttMessage message = new MqttMessage(encodedPayload);
+                message.setId(5866);
+                message.setRetained(true);
+                message.setQos(2);
+                mqttAndroidClient.publish(publishTopic, message);
+            }
 
-
-        } catch (MqttException ex){
+        } catch (MqttException | UnsupportedEncodingException ex){
             ex.printStackTrace();
         }
     }
