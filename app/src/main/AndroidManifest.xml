@@ -15,11 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartHome"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DatabaseEditActivity" />
-        <activity android:name=".UserCameraHistory" />
-        <activity android:name=".VideoCameraHistory" />
-        <activity android:name=".LightActivity" />
-        <activity android:name=".Counter" />
         <activity android:name=".LightMenu" />
         <activity android:name=".VideoCamera" />
         <activity android:name=".Weather" />

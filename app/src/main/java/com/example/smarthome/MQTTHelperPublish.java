@@ -52,11 +52,6 @@ public class MQTTHelperPublish{
 
     }
 
-
-    public void setCallback(MqttCallbackExtended callback) {
-        mqttAndroidClient.setCallback(callback);
-    }
-
     private void connect(){
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);

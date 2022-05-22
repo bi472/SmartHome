@@ -28,9 +28,4 @@ public class VideoCamera extends AppCompatActivity {
         firstCamera.loadUrl("https://youtu.be/WInT7NRq2Ss");
         secondCamera.loadUrl("https://youtu.be/ofYWecmqbDs");
     }
-
-    public void goToHistory(View view) {
-        Intent intent = new Intent(this, VideoCameraHistory.class);
-        startActivity(intent);
-    }
 }

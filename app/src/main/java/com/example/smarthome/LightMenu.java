@@ -1,35 +1,36 @@
 package com.example.smarthome;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Switch;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 public class LightMenu extends AppCompatActivity {
     final String LOG_TAG = "myLogs";
     DBHelper dbHelper;
-    String check;
-    TextView condition;
-    Button change_condition;
+    SQLiteDatabase db;
+    ArrayList<Switches> switches = new ArrayList<Switches>();
     MQTTHelperPublish mqttHelperPublish;
     MQTTHelperSubscribe mqttHelperSubscribe;
+    RecyclerView recyclerView;
+    Switch aSwitch;
 
     public boolean queryCheck(String name){
-        SQLiteDatabase db = dbHelper.open();
+        String check = null;
+        db = dbHelper.open();
         Cursor cursor = db.query(
                 dbHelper.TABLE_NAME_SWITCHES,   // таблица
                 new String[]{dbHelper.COLUMN_NAME_CONDITION},            // столбцы
@@ -50,6 +51,22 @@ public class LightMenu extends AppCompatActivity {
             return false;
     }
 
+    public void queryChange(String room_name, String condition){
+        db = dbHelper.open();
+        ContentValues cv = new ContentValues();
+        cv.put(dbHelper.COLUMN_NAME_NAME_SWITCH, room_name);
+        cv.put(dbHelper.COLUMN_NAME_CONDITION, condition);
+        db.update(dbHelper.TABLE_NAME_SWITCHES,
+                cv,
+                dbHelper.COLUMN_NAME_NAME_SWITCH + "=?",
+                new String[]{room_name}
+        );
+
+        Log.d(LOG_TAG, room_name + " is" + condition);
+
+        dbHelper.close();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,18 +74,24 @@ public class LightMenu extends AppCompatActivity {
 
         dbHelper = new DBHelper(this);
 
-        condition = findViewById(R.id.light_condition);
-
-        change_condition = findViewById(R.id.find_light);
+        setInitialData();
+        recyclerView = findViewById(R.id.list);
+        recyclerView.setHasFixedSize(true);
         subscribe();
-
-        change_condition.setOnClickListener(new View.OnClickListener() {
+        // создаем адаптер
+        SwitchesAdapter.OnSwitchClickListener switchClickListener = new SwitchesAdapter.OnSwitchClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onSwitchClick(Switches switches, int position) {
                 startMqtt();
             }
-        });
+        };
+        SwitchesAdapter adapter = new SwitchesAdapter(switchClickListener, this, switches);
+        // устанавливаем для списка адаптер
+        recyclerView.setAdapter(adapter);
+    }
 
+    private void setInitialData() {
+        switches.add(new Switches("Living", R.drawable.gostinaya, queryCheck("Living")));
     }
 
     private void startMqtt() {
@@ -92,8 +115,12 @@ public class LightMenu extends AppCompatActivity {
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                 Log.w("Debug",mqttMessage.toString());
                 JSONObject relayInfoJson = new JSONObject(mqttMessage.toString());
-                String conditionString = relayInfoJson.getString("POWER");
-                condition.setText(conditionString);
+                Log.i("-----Сообщение с датчика", relayInfoJson.getString("POWER"));
+                if(relayInfoJson.getString("POWER").contains("ON"))
+                    queryChange("Living", "on");
+                else
+                    queryChange("Living", "off");
+
             }
 
             @Override

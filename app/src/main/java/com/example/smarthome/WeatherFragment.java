@@ -108,7 +108,6 @@ public class WeatherFragment extends Fragment {
                 roomTemp.setText("Температура: " + localNamesJson.getString("Temperature") + " ℃");
                 roomHum.setText("Влажность: " + localNamesJson.getString("Humidity") + " %");
                 roomUpdateTime.setText("Обновлено в " + time);
-                Toast.makeText(getActivity(), "Данные о климате в комнате успешно обновлены!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
