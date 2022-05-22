@@ -1,43 +1,27 @@
 package com.example.smarthome;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.Manifest;
-import android.app.ActionBar;
 import android.graphics.Typeface;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import android.os.Handler;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 
 public class WeatherFragment extends Fragment {
@@ -53,7 +37,7 @@ public class WeatherFragment extends Fragment {
     // нужен handler для потока
     Handler handler;
 
-    MQTTHelper mqttHelper;
+    MQTTHelperSubscribe mqttHelperSubscribe;
 
     TextView roomTemp;
     TextView roomHum;
@@ -97,8 +81,8 @@ public class WeatherFragment extends Fragment {
     }
 
     private void startMqtt(){
-        mqttHelper = new MQTTHelper(getActivity(), "connect");
-        mqttHelper.setCallback(new MqttCallbackExtended() {
+        mqttHelperSubscribe = new MQTTHelperSubscribe(getActivity(), "tele/relay_with_temp/SENSOR", "temperature");
+        mqttHelperSubscribe.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
 
