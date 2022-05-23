@@ -12,12 +12,14 @@
         android:id="@+id/lightButton"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginTop="248dp"
-        android:elevation="5dp"
+        android:layout_marginTop="228dp"
+        android:background="@drawable/button_background"
         android:onClick="click"
         android:stateListAnimator="@null"
         android:text="Управление светом"
+        android:textColor="@color/white"
         android:translationZ="5dp"
+        android:elevation="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,47 +29,32 @@
         android:id="@+id/WeatherButton"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginTop="292dp"
+        android:layout_marginTop="288dp"
         android:onClick="click"
         android:text="Погода"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background"
+        android:translationZ="5dp"
+        android:elevation="5dp"/>
 
     <Button
         android:id="@+id/CameraButton"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="336dp"
+        android:layout_marginTop="348dp"
         android:onClick="click"
         android:text="Посмотреть видеокамеру"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/CounterButton"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="-6dp"
-        android:onClick="click"
-        android:text="Счётчики"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CameraButton" />
-
-    <Button
-        android:id="@+id/db_editor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="Изменение БД"
-        android:onClick="click"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CounterButton" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/button_background"
+        android:translationZ="5dp"
+        android:elevation="5dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

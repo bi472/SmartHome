@@ -36,8 +36,8 @@ public class SwitchesAdapter extends RecyclerView.Adapter<SwitchesAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(SwitchesAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        Switches state = list_switches.get(position);
+    public void onBindViewHolder(SwitchesAdapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+        final Switches state = list_switches.get(position);
         holder.imageView.setImageResource(state.getFlagResource());
         holder.nameView.setText(state.getName());
         holder.aSwitch.setChecked(state.getCondition());

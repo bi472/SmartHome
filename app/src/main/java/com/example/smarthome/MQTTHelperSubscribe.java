@@ -55,7 +55,7 @@ public class MQTTHelperSubscribe {
         mqttAndroidClient.setCallback(callback);
     }
 
-    private void connect(String subscriptionTopic){
+    private void connect(final String subscriptionTopic){
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);

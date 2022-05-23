@@ -77,7 +77,6 @@ public class LightMenu extends AppCompatActivity {
         setInitialData();
         recyclerView = findViewById(R.id.list);
         recyclerView.setHasFixedSize(true);
-        subscribe();
         // создаем адаптер
         SwitchesAdapter.OnSwitchClickListener switchClickListener = new SwitchesAdapter.OnSwitchClickListener() {
             @Override
@@ -92,14 +91,15 @@ public class LightMenu extends AppCompatActivity {
 
     private void setInitialData() {
         switches.add(new Switches("Living", R.drawable.gostinaya, queryCheck("Living")));
+        subscribe("stat/relay_with_temp/POWER", "Living");
     }
 
     private void startMqtt() {
         mqttHelperPublish = new MQTTHelperPublish(getApplicationContext());
     }
 
-    private void subscribe(){
-        mqttHelperSubscribe = new MQTTHelperSubscribe(getApplicationContext(), "stat/relay_with_temp/POWER", "power");
+    private void subscribe(String subscriptionTopic, final String room_name){
+        mqttHelperSubscribe = new MQTTHelperSubscribe(getApplicationContext(), subscriptionTopic, "power");
         mqttHelperSubscribe.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
@@ -117,9 +117,9 @@ public class LightMenu extends AppCompatActivity {
                 JSONObject relayInfoJson = new JSONObject(mqttMessage.toString());
                 Log.i("-----Сообщение с датчика", relayInfoJson.getString("POWER"));
                 if(relayInfoJson.getString("POWER").contains("ON"))
-                    queryChange("Living", "on");
+                    queryChange(room_name, "on");
                 else
-                    queryChange("Living", "off");
+                    queryChange(room_name, "off");
 
             }
 

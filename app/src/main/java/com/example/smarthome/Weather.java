@@ -48,12 +48,9 @@ public class Weather extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.change_city:{
-                showInputDialog();
-                break;
-                }
             case R.id.update_city:{
                 checkPermisson();
+                getCoordinates();
                 break;
             }
         }

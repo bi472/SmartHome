@@ -2,22 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="25dp">
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/current_temperature_field"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:outlineAmbientShadowColor="@color/white"
+        android:outlineSpotShadowColor="@color/white"
+        android:theme="@style/CircularProgress"/>
 
     <TextView
         android:id="@+id/city_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="350dp"
+        android:layout_height="30dp"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
         android:shadowColor="@color/quantum_black_100"
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="10"
-        android:text="Город"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white"
-        android:textSize="35sp" />
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform" />
 
     <TextView
         android:id="@+id/details_field"
@@ -26,14 +40,13 @@
         android:layout_alignBottom="@id/city_field"
         android:layout_centerInParent="true"
         android:layout_marginBottom="-40dp"
-        android:text="облачно"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white"
-        android:textSize="20sp"
         android:shadowColor="@color/quantum_black_100"
         android:shadowDx="3"
         android:shadowDy="3"
-        android:shadowRadius="10" />
+        android:shadowRadius="10"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/current_temperature_field"
@@ -47,22 +60,20 @@
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="10"
-        android:text="20"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white"
         android:textSize="70sp" />
 
-    <TextView
+    <ImageView
         android:id="@+id/weather_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_alignBottom="@id/details_field"
 
         android:layout_centerInParent="true"
         android:layout_marginTop="-100dp"
-        android:layout_marginBottom="-110dp"
-        android:fontFamily=""
-        android:textColor="@color/white"
+        android:layout_marginBottom="-120dp"
+        android:scaleType="fitXY"
         android:textSize="70sp" />
 
     <TextView
@@ -76,7 +87,6 @@
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="10"
-        android:text="5 апреля, вторник"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white"
         android:textSize="20sp" />
@@ -85,16 +95,15 @@
         android:id="@+id/updated_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="14:40"
         android:layout_alignBottom="@id/updated_field"
-        android:layout_marginBottom="-35dp"
         android:layout_centerInParent="true"
+        android:layout_marginBottom="-35dp"
         android:shadowColor="@color/quantum_black_100"
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="10"
-        android:textSize="30sp"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/feels_like"
@@ -107,7 +116,6 @@
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="10"
-        android:text="Ощущается как -3℃"
         android:textColor="@color/white"
         android:textSize="15sp" />
 

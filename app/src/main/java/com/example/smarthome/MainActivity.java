@@ -35,10 +35,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, LightMenu.class);
                 startActivity(intent);
                 break;
-            case R.id.CounterButton:
-                Intent intent1 = new Intent(this, Counter.class);
-                startActivity(intent1);
-                break;
             case R.id.WeatherButton:
                 Intent intent2 = new Intent(this, Weather.class);
                 startActivity(intent2);
@@ -47,9 +43,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent3 = new Intent(this, VideoCamera.class);
                 startActivity(intent3);
                 break;
-            case R.id.db_editor:
-                Intent intent4 = new Intent(this, DatabaseEditActivity.class);
-                startActivity(intent4);
         }
     }
 }

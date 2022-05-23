@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/cv"
         app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="#00BFFF"
+        app:cardBackgroundColor="#000080"
         >
         <RelativeLayout
             android:layout_width="match_parent"

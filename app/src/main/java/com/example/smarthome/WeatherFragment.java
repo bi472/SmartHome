@@ -1,11 +1,19 @@
 package com.example.smarthome;
 
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+
 import android.graphics.Typeface;
+import android.icu.text.Transliterator;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,12 +25,20 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
 import android.os.Handler;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
+
+import retrofit2.http.Url;
 
 public class WeatherFragment extends Fragment {
     Typeface weatherFont;
@@ -31,11 +47,12 @@ public class WeatherFragment extends Fragment {
     TextView updatedField;
     TextView detailsField;
     TextView currentTemperatureField;
-    TextView weatherIcon;
     TextView timeUpdated;
     TextView feelsLike;
+    ImageView weather_icon;
     // нужен handler для потока
     Handler handler;
+    ProgressBar progressBar;
 
     MQTTHelperSubscribe mqttHelperSubscribe;
 
@@ -57,12 +74,14 @@ public class WeatherFragment extends Fragment {
         updatedField = (TextView)rootView.findViewById(R.id.updated_field);
         detailsField = (TextView)rootView.findViewById(R.id.details_field);
         currentTemperatureField = (TextView)rootView.findViewById(R.id.current_temperature_field);
-        weatherIcon = (TextView)rootView.findViewById(R.id.weather_icon);
+        weather_icon = (ImageView) rootView.findViewById(R.id.weather_icon);
         timeUpdated = (TextView)rootView.findViewById(R.id.updated_time);
         feelsLike = (TextView)rootView.findViewById(R.id.feels_like);
         roomTemp = (TextView) rootView.findViewById(R.id.temperature_room);
         roomHum = (TextView) rootView.findViewById(R.id.humidity_room);
         roomUpdateTime = (TextView) rootView.findViewById(R.id.updated_time_room);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "weathericons-regular-webfont.ttf");
 
@@ -71,11 +90,7 @@ public class WeatherFragment extends Fragment {
         roomHum.setText("Влажность: " + new CityPreference(getActivity()).getHum() + " %");
         roomUpdateTime.setText("Обновлено в " + new CityPreference(getActivity()).getTime());
 
-        weatherIcon.setTypeface(weatherFont);
-
-
         startMqtt();
-
 
         return rootView;
     }
@@ -122,96 +137,65 @@ public class WeatherFragment extends Fragment {
     private void updateWeatherData(final String Lat, final String Lon){
         new Thread(){
             public void run(){
-                final JSONObject weatherJson = RemoteFetch.getWeatherJSON(getActivity(), Lat, Lon);
-                final JSONObject cityJson = RemoteFetch.getCity(getActivity(), Lat, Lon);
-                if(weatherJson == null){
-                    handler.post(new Runnable(){
-                        public void run(){
-                            Toast.makeText(getActivity(),
-                                    getActivity().getString(R.string.place_not_found),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    handler.post(new Runnable(){
-                        public void run(){
-                            renderWeather(weatherJson,cityJson, Lat, Lon);
-                        }
-                    });
-                }
+                    final JSONObject weatherJson = RemoteFetch.getWeatherJSON(getActivity(), Lat, Lon);
+                    if(weatherJson == null){
+                        handler.post(new Runnable(){
+                            public void run(){
+                                Toast.makeText(getActivity(),
+                                        getActivity().getString(R.string.place_not_found),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else {
+                        handler.post(new Runnable(){
+                            public void run(){
+                                renderWeather(weatherJson, Lat, Lon);
+                            }
+                        });
+                    }
             }
         }.start();
     }
 
     // Метод renderWeather использует данные JSON для обновления объектов TextView
-    private void renderWeather(JSONObject json, JSONObject cityJson, String Lat, String Lon){
+    private void renderWeather(JSONObject json, String Lat, String Lon){
         try {
-           if (cityJson.getJSONObject("local_names") != null) {
-                JSONObject localNamesJson = cityJson.getJSONObject("local_names");
-                cityField.setText(localNamesJson.getString("ru"));
-            }
-            else
-                cityField.setText(cityJson.getString("name"));
-            JSONObject details = json.getJSONArray("weather").getJSONObject(0);
-            JSONObject main = json.getJSONObject("main");
-            detailsField.setText(
-                    details.getString("description").toUpperCase(Locale.US));
+            progressBar.setVisibility(View.GONE);
 
-            currentTemperatureField.setText(
-                    String.format("%.2f", main.getDouble("temp"))+ "℃"
-            );
-            feelsLike.setText("Ощущается как " +
-                    String.format("%.2f", main.getDouble("feels_like")) + "℃"
-            );
+            final JSONObject locJson = json.getJSONObject("location");
+            final JSONObject weatherJson = json.getJSONObject("current");
+            final JSONObject conditionJson = weatherJson.getJSONObject("condition");
 
-            DateFormat df = DateFormat.getDateTimeInstance();
+            String CYRILLIC_TO_LATIN = "Latin-Russian/BGN";
+            String name = locJson.getString("name");
+
+            Transliterator toLatinTrans = Transliterator.getInstance(CYRILLIC_TO_LATIN);
+            String result = toLatinTrans.transliterate(name);
+
+            cityField.setText(result + ", " + locJson.getString("region"));
+            detailsField.setText(conditionJson.getString("text"));
+            double temp = weatherJson.getDouble("temp_c");
+            currentTemperatureField.setText((int) temp + " ℃");
+            double feels = weatherJson.getDouble("feelslike_c");
+            feelsLike.setText("Ощущается как " + (int) feels + " ℃");
+
+            Picasso.get().load("https:" + conditionJson.getString("icon")).into(weather_icon);
+
             //Перевод даты в соответствующий часовой пояс
+            Date date = new Date(weatherJson.getLong("last_updated_epoch")*1000L);
             Calendar myCal = new GregorianCalendar();
-            Date updatedOn = new Date(json.getLong("dt")*1000);
-            myCal.setTime(updatedOn);
+            myCal.setTime(date);
 
             updatedField.setText(myCal.get(Calendar.DAY_OF_MONTH) +
                     " " + myCal.getDisplayName(Calendar.MONTH, Calendar.LONG_FORMAT, new Locale("ru")) +
                     ", " + myCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG_FORMAT, new Locale("ru")));
+
             timeUpdated.setText(myCal.get(Calendar.HOUR_OF_DAY) + ":" + myCal.get(Calendar.MINUTE));
 
-            setWeatherIcon(details.getInt("id"),
-                    json.getJSONObject("sys").getLong("sunrise") * 1000,
-                    json.getJSONObject("sys").getLong("sunset") * 1000);
 
         }catch(Exception e){
             Log.e("Умный дом", e.getMessage());
         }
-    }
-
-    // Изменение иконки в соответствии с погодой
-    private void setWeatherIcon(int actualId, long sunrise, long sunset){
-        int id = actualId / 100;
-        String icon = "";
-        if(actualId == 800){
-            long currentTime = new Date().getTime();
-            if(currentTime>=sunrise && currentTime<sunset) {
-                icon = getActivity().getString(R.string.weather_sunny);
-            } else {
-                icon = getActivity().getString(R.string.weather_clear_night);
-            }
-        } else {
-            switch(id) {
-                case 2 : icon = getActivity().getString(R.string.weather_thunder);
-                    break;
-                case 3 : icon = getActivity().getString(R.string.weather_drizzle);
-                    break;
-                case 7 : icon = getActivity().getString(R.string.weather_foggy);
-                    break;
-                case 8 : icon = getActivity().getString(R.string.weather_cloudy);
-                    break;
-                case 6 : icon = getActivity().getString(R.string.weather_snowy);
-                    break;
-                case 5 : icon = getActivity().getString(R.string.weather_rainy);
-                    break;
-            }
-        }
-        weatherIcon.setText(icon);
     }
 
     public void changeCity(String Lat, String Lon){
