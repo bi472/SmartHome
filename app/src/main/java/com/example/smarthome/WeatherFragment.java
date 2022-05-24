@@ -50,6 +50,7 @@ public class WeatherFragment extends Fragment {
     TextView timeUpdated;
     TextView feelsLike;
     ImageView weather_icon;
+    TextView region_field;
     // нужен handler для потока
     Handler handler;
     ProgressBar progressBar;
@@ -70,6 +71,7 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_weather, container, false);
+        region_field = (TextView)rootView.findViewById(R.id.region_field);
         cityField = (TextView)rootView.findViewById(R.id.city_field);
         updatedField = (TextView)rootView.findViewById(R.id.updated_field);
         detailsField = (TextView)rootView.findViewById(R.id.details_field);
@@ -161,6 +163,9 @@ public class WeatherFragment extends Fragment {
     private void renderWeather(JSONObject json, String Lat, String Lon){
         try {
             progressBar.setVisibility(View.GONE);
+            Geocoder gc = new Geocoder(getContext(), Locale.getDefault());
+            List<Address> addressList = gc.getFromLocation(parseDouble(Lat), parseDouble(Lon), 1);
+            region_field.setText(addressList.get(0).getLocality());
 
             final JSONObject locJson = json.getJSONObject("location");
             final JSONObject weatherJson = json.getJSONObject("current");
@@ -170,9 +175,9 @@ public class WeatherFragment extends Fragment {
             String name = locJson.getString("name");
 
             Transliterator toLatinTrans = Transliterator.getInstance(CYRILLIC_TO_LATIN);
-            String result = toLatinTrans.transliterate(name);
+            String place_name = toLatinTrans.transliterate(name);
 
-            cityField.setText(result + ", " + locJson.getString("region"));
+            cityField.setText(place_name);
             detailsField.setText(conditionJson.getString("text"));
             double temp = weatherJson.getDouble("temp_c");
             currentTemperatureField.setText((int) temp + " ℃");
@@ -190,7 +195,10 @@ public class WeatherFragment extends Fragment {
                     " " + myCal.getDisplayName(Calendar.MONTH, Calendar.LONG_FORMAT, new Locale("ru")) +
                     ", " + myCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG_FORMAT, new Locale("ru")));
 
-            timeUpdated.setText(myCal.get(Calendar.HOUR_OF_DAY) + ":" + myCal.get(Calendar.MINUTE));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            String time = simpleDateFormat.format(myCal.getTime());
+
+            timeUpdated.setText(time);
 
 
         }catch(Exception e){

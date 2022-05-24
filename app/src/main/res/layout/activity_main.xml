@@ -12,49 +12,90 @@
         android:id="@+id/lightButton"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginTop="228dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/button_background"
+        android:elevation="5dp"
         android:onClick="click"
         android:stateListAnimator="@null"
-        android:text="Управление светом"
+        android:text="Управлять светом"
         android:textColor="@color/white"
         android:translationZ="5dp"
-        android:elevation="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <Button
         android:id="@+id/WeatherButton"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginTop="288dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_background"
+        android:elevation="5dp"
         android:onClick="click"
-        android:text="Погода"
+        android:text="Узнать погоду"
+        android:textColor="@color/white"
+        android:translationZ="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/CameraButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/white"
-        android:background="@drawable/button_background"
-        android:translationZ="5dp"
-        android:elevation="5dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/lightButton" />
 
     <Button
         android:id="@+id/CameraButton"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="348dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_background"
+        android:elevation="5dp"
         android:onClick="click"
         android:text="Посмотреть видеокамеру"
         android:textColor="@color/white"
+        android:translationZ="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/WeatherButton" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="Добро пожаловать \nв приложение умный дом!"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="Выберите функцию:"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:background="@drawable/button_background"
-        android:translationZ="5dp"
-        android:elevation="5dp" />
+        android:text="Настроить MQTT сервер"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CameraButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
