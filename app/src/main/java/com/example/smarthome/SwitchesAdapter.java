@@ -24,7 +24,7 @@ public class SwitchesAdapter extends RecyclerView.Adapter<SwitchesAdapter.ViewHo
     private final LayoutInflater inflater;
     private final List<Switches> list_switches;
 
-    SwitchesAdapter(OnSwitchClickListener onClickListener, Context context, List<Switches> list_switches) {
+    SwitchesAdapter(OnSwitchClickListener onClickListener,Context context, List<Switches> list_switches) {
         this.onClickListener = onClickListener;
         this.list_switches = list_switches;
         this.inflater = LayoutInflater.from(context);

@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartHome"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".MQTT_Settings"
+            android:exported="false" />
         <activity android:name=".LightMenu" />
         <activity android:name=".VideoCamera" />
         <activity android:name=".Weather" />

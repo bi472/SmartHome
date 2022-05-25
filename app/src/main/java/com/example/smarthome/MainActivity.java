@@ -43,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent3 = new Intent(this, VideoCamera.class);
                 startActivity(intent3);
                 break;
+            case R.id.settingsButton:
+                Intent intent4 = new Intent(this, MQTT_Settings.class);
+                startActivity(intent4);
+                break;
         }
     }
 }

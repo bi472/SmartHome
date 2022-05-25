@@ -3,12 +3,12 @@ package com.example.smarthome;
 public class Switches {
     private String name; // название
     private int imgResource;
-    private boolean condition;// ресурс флага
+    private boolean condition;
 
     public Switches(String name, int image, boolean condition){
-        this.condition = condition;
         this.name=name;
         this.imgResource=image;
+        this.condition =condition;
     }
 
     public String getName() {
@@ -27,7 +27,5 @@ public class Switches {
         this.imgResource = imgResource;
     }
 
-    public void setCondition(boolean condition) { this.condition = condition;};
-
-    public boolean getCondition() {return this.condition;};
+    public boolean getCondition() { return this.condition; }
 }

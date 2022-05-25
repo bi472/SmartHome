@@ -19,13 +19,9 @@ public class VideoCamera extends AppCompatActivity {
 
         firstCamera = (WebView) findViewById(R.id.firstCamera);
         firstCamera.getSettings().setJavaScriptEnabled(true);
-        secondCamera = (WebView) findViewById(R.id.secondCamera);
-        secondCamera.getSettings().setJavaScriptEnabled(true);
 
         firstCamera.setWebViewClient(new MyWebViewClient());
-        secondCamera.setWebViewClient(new MyWebViewClient());
 
-        firstCamera.loadUrl("https://youtu.be/WInT7NRq2Ss");
-        secondCamera.loadUrl("https://youtu.be/ofYWecmqbDs");
+        firstCamera.loadUrl("https://www.youtube.com/embed/cN1HsJnt-MY");
     }
 }

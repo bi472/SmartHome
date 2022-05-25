@@ -8,8 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Switch;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -20,13 +18,16 @@ import java.util.ArrayList;
 
 public class LightMenu extends AppCompatActivity {
     final String LOG_TAG = "myLogs";
+
     DBHelper dbHelper;
     SQLiteDatabase db;
+
     ArrayList<Switches> switches = new ArrayList<Switches>();
+    RecyclerView recyclerView;
+    SwitchesAdapter adapter;
+
     MQTTHelperPublish mqttHelperPublish;
     MQTTHelperSubscribe mqttHelperSubscribe;
-    RecyclerView recyclerView;
-    Switch aSwitch;
 
     public boolean queryCheck(String name){
         String check = null;
@@ -84,22 +85,27 @@ public class LightMenu extends AppCompatActivity {
                 startMqtt();
             }
         };
-        SwitchesAdapter adapter = new SwitchesAdapter(switchClickListener, this, switches);
+
+        adapter = new SwitchesAdapter(switchClickListener, this, switches);
         // устанавливаем для списка адаптер
         recyclerView.setAdapter(adapter);
+
+        adapter.notifyDataSetChanged();
     }
 
     private void setInitialData() {
         switches.add(new Switches("Living", R.drawable.gostinaya, queryCheck("Living")));
-        subscribe("stat/relay_with_temp/POWER", "Living");
+        subscribe("Living");
+        switches.add(new Switches("Lobby", R.drawable.prihozhaya, queryCheck("Lobby")));
     }
 
     private void startMqtt() {
-        mqttHelperPublish = new MQTTHelperPublish(getApplicationContext());
+        mqttHelperPublish = new MQTTHelperPublish(getApplicationContext(), "Toggle", "cmnd/relay_with_temp/POWER");
     }
 
-    private void subscribe(String subscriptionTopic, final String room_name){
-        mqttHelperSubscribe = new MQTTHelperSubscribe(getApplicationContext(), subscriptionTopic, "power");
+    private void subscribe(final String room_name){
+        mqttHelperSubscribe = new MQTTHelperSubscribe(getApplicationContext(), "stat/relay_with_temp/POWER", "power");
+        mqttHelperPublish = new MQTTHelperPublish(getApplicationContext(), "", "cmnd/relay_with_temp/POWER");
         mqttHelperSubscribe.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
@@ -114,13 +120,12 @@ public class LightMenu extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                 Log.w("Debug",mqttMessage.toString());
-                JSONObject relayInfoJson = new JSONObject(mqttMessage.toString());
-                Log.i("-----Сообщение с датчика", relayInfoJson.getString("POWER"));
-                if(relayInfoJson.getString("POWER").contains("ON"))
+                if (mqttMessage.toString().contains("ON")) {
                     queryChange(room_name, "on");
-                else
+                }
+                else if(mqttMessage.toString().contains("OFF")){
                     queryChange(room_name, "off");
-
+                };
             }
 
             @Override
@@ -129,4 +134,5 @@ public class LightMenu extends AppCompatActivity {
             }
         });
     }
+
 }

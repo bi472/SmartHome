@@ -21,11 +21,10 @@ public class MQTTHelperPublish{
     final String serverUri = "tcp://m9.wqtt.ru:12488";
 
     final String clientId = "power_relay";
-    final String publishTopic = "cmnd/relay_with_temp/POWER";
     final String username = "u_Q8U3S8";
     final String password = "JPreADjI";
 
-    public MQTTHelperPublish(Context context){
+    public MQTTHelperPublish(Context context, String msg, String publishTopic){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -48,11 +47,11 @@ public class MQTTHelperPublish{
 
             }
         });
-        connect();
+        connect(msg, publishTopic);
 
     }
 
-    private void connect(){
+    private void connect(final String msg, final String publishTopic){
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
@@ -64,8 +63,7 @@ public class MQTTHelperPublish{
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                         try {
-                            byte[] encodedPayload = new byte[0];
-                            String msg = "Toggle";
+                            byte[] encodedPayload = new byte[0];;
                             encodedPayload = msg.getBytes("UTF-8");
                             MqttMessage message = new MqttMessage(encodedPayload);
                             message.setRetained(true);
