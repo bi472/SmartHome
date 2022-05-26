@@ -2,20 +2,9 @@ package com.example.smarthome;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActionBar;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.database.Cursor;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     DBHelper dbHelper;
@@ -44,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent3);
                 break;
             case R.id.settingsButton:
-                Intent intent4 = new Intent(this, MQTT_Settings.class);
+                Intent intent4 = new Intent(this, MQTTSettings.class);
                 startActivity(intent4);
                 break;
         }

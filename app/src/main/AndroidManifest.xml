@@ -16,7 +16,7 @@
         android:theme="@style/Theme.SmartHome"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MQTT_Settings"
+            android:name=".MQTTSettings"
             android:exported="false" />
         <activity android:name=".LightMenu" />
         <activity android:name=".VideoCamera" />

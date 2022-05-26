@@ -27,18 +27,12 @@ import android.os.Handler;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.URL;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-
-import retrofit2.http.Url;
 
 public class WeatherFragment extends Fragment {
     Typeface weatherFont;
@@ -87,10 +81,10 @@ public class WeatherFragment extends Fragment {
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "weathericons-regular-webfont.ttf");
 
-        updateWeatherData(new CityPreference(getActivity()).getLat(), new  CityPreference(getActivity()).getLon());
-        roomTemp.setText("Температура: " + new CityPreference(getActivity()).getTemp() + " ℃");
-        roomHum.setText("Влажность: " + new CityPreference(getActivity()).getHum() + " %");
-        roomUpdateTime.setText("Обновлено в " + new CityPreference(getActivity()).getTime());
+        updateWeatherData(new Preferences(getActivity()).getLat(), new Preferences(getActivity()).getLon());
+        roomTemp.setText("Температура: " + new Preferences(getActivity()).getTemp() + " ℃");
+        roomHum.setText("Влажность: " + new Preferences(getActivity()).getHum() + " %");
+        roomUpdateTime.setText("Обновлено в " + new Preferences(getActivity()).getTime());
 
         startMqtt();
 
@@ -119,9 +113,9 @@ public class WeatherFragment extends Fragment {
                 SimpleDateFormat output = new SimpleDateFormat("HH:mm:ss");
                 Date d = sdf.parse(roomInfoJson.getString("Time"));
                 String time = output.format(d);
-                new CityPreference(getActivity()).setTemp(localNamesJson.getString("Temperature"));
-                new CityPreference(getActivity()).setHum(localNamesJson.getString("Humidity"));
-                new CityPreference(getActivity()).setTime(time);
+                new Preferences(getActivity()).setTemp(localNamesJson.getString("Temperature"));
+                new Preferences(getActivity()).setHum(localNamesJson.getString("Humidity"));
+                new Preferences(getActivity()).setTime(time);
                 roomTemp.setText("Температура: " + localNamesJson.getString("Temperature") + " ℃");
                 roomHum.setText("Влажность: " + localNamesJson.getString("Humidity") + " %");
                 roomUpdateTime.setText("Обновлено в " + time);

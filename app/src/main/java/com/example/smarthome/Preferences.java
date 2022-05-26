@@ -2,17 +2,17 @@ package com.example.smarthome;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
-public class CityPreference {
+public class Preferences {
 
     SharedPreferences prefs;
 
-    public CityPreference(Activity activity){
+    public Preferences(Activity activity){
         prefs = activity.getPreferences(Activity.MODE_PRIVATE);
     }
 
     // Значение по умолчанию если пользователь не указал город
-    String getLat() { return prefs.getString("Latitude", "30,5");};
-    String getLon() {return prefs.getString("Longitude", "60,5");};
+    String getLat() { return prefs.getString("Latitude", "55.37");};
+    String getLon() {return prefs.getString("Longitude", "37.36");};
     String getTemp() {return prefs.getString("Temperature", "0");}
     String getHum() {return prefs.getString("Humidity", "0");}
     String getTime() {return prefs.getString("Time", "0");}

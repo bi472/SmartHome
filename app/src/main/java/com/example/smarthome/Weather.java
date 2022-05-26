@@ -9,23 +9,13 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Weather extends AppCompatActivity {
 
@@ -50,7 +40,6 @@ public class Weather extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.update_city:{
                 checkPermisson();
-                getCoordinates();
                 break;
             }
         }
@@ -75,6 +64,9 @@ public class Weather extends AppCompatActivity {
             double lon = l.getLongitude(); // долгота
             Log.i("Сообщение с координатами: ", String.valueOf(lat) + ", "+ String.valueOf(lon));
             changeCity(String.valueOf(lat), String.valueOf(lon));
+        }
+        else {
+            Log.i("Сообщение с координатами: ", "Не попал");
         }
     }
 
@@ -109,7 +101,7 @@ public class Weather extends AppCompatActivity {
         WeatherFragment wf = (WeatherFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.container);
         wf.changeCity(Lat, Lon);
-        new CityPreference(this).setLat(Lat);
-        new CityPreference(this).setLon(Lon);
+        new Preferences(this).setLat(Lat);
+        new Preferences(this).setLon(Lon);
     }
 }
