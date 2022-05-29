@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">SmartHome</string>
-    <string name="change_city">Изменить город</string>
     <string name="update_city">Обновить город</string>
     <string name="WeatherURL">d69308a1f9c7b8e150503283dd7ff5d5</string>
 
@@ -13,6 +12,6 @@
     <string name="weather_thunder">&#xf01e;</string>
     <string name="weather_drizzle">&#xf01c;</string>
 
-    <string name="place_not_found">Информация не найдена.</string>
+    <string name="place_not_found">Информация не найдена. Пожалуйста, включите инетрнет!</string>
 
 </resources>

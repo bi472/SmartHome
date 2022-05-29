@@ -97,6 +97,7 @@ public class LightMenu extends AppCompatActivity {
         switches.add(new Switches("Living", R.drawable.gostinaya, queryCheck("Living")));
         subscribe("Living");
         switches.add(new Switches("Lobby", R.drawable.prihozhaya, queryCheck("Lobby")));
+        switches.add(new Switches("Bathroom", R.drawable.vannaya, queryCheck("Bathroom")));
     }
 
     private void startMqtt() {

@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
+        android:textColor="@color/white"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
@@ -110,28 +111,30 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="7dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textview8" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/applyMqttt"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:background="@drawable/button_background"
         android:elevation="5dp"
         android:text="применить"
+        android:onClick="click"
         android:textColor="@color/white"
         android:translationZ="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_ed" />
+        app:layout_constraintTop_toBottomOf="@+id/password_ed"
+        tools:ignore="OnClick" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/applySwitch"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="23dp"
@@ -154,7 +157,7 @@
         android:textSize="23sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/applyMqttt" />
 
     <TextView
         android:id="@+id/textView10"

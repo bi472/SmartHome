@@ -80,23 +80,6 @@ public class Weather extends AppCompatActivity {
         }
     }
 
-
-
-    private void showInputDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Изменить город");
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-        builder.setPositiveButton("Изменить", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                changeCity("30.5", "60.5");
-            }
-        });
-        builder.show();
-    }
-
     public void changeCity(String Lat, String Lon){
         WeatherFragment wf = (WeatherFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.container);
