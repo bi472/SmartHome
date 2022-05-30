@@ -20,11 +20,10 @@ public class MQTTHelperPublish{
 
     final String serverUri = "tcp://m9.wqtt.ru:12488";
 
-    final String clientId = "power_relay";
     final String username = "u_Q8U3S8";
     final String password = "JPreADjI";
 
-    public MQTTHelperPublish(Context context, String msg, String publishTopic){
+    public MQTTHelperPublish(Context context, String msg, String publishTopic, String clientId){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override

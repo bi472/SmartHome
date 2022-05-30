@@ -34,7 +34,7 @@ public class MQTTHelperSubscribe {
 
             @Override
             public void connectionLost(Throwable throwable) {
-
+                Log.i("MQTT", "connection lost " + throwable.toString());
             }
 
             @Override

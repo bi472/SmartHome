@@ -23,9 +23,7 @@ public class Switches {
         return this.imgResource;
     }
 
-    public void setFlagResource(int flagResource) {
-        this.imgResource = imgResource;
-    }
-
     public boolean getCondition() { return this.condition; }
+
+    public void setCondition(boolean condition) {this.condition = condition;};
 }

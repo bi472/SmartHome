@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class WeatherFragment extends Fragment {
-    Typeface weatherFont;
-
     TextView cityField;
     TextView updatedField;
     TextView detailsField;
@@ -77,9 +75,6 @@ public class WeatherFragment extends Fragment {
         roomHum = (TextView) rootView.findViewById(R.id.humidity_room);
         roomUpdateTime = (TextView) rootView.findViewById(R.id.updated_time_room);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
-
-
-        weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "weathericons-regular-webfont.ttf");
 
         updateWeatherData(new Preferences(getActivity()).getLat(), new Preferences(getActivity()).getLon());
         roomTemp.setText("Температура: " + new Preferences(getActivity()).getTemp() + " ℃");
