@@ -39,4 +39,9 @@ public class Preferences {
     }
 
     void setTime(String Time){ prefs.edit().putString("Time", Time).commit(); };
+
+    void setMQTTServer(String server) {prefs. edit().putString("MQTTServer", server).commit();}
+    void setPort(String port) {prefs.edit().putString("Port", port).commit();}
+    void setUsername(String user) {prefs.edit().putString("User", user).commit();}
+    void setPassword(String password) {prefs. edit().putString("Password", password).commit();}
 }

@@ -62,7 +62,7 @@ public class MQTTHelperPublish{
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                         try {
-                            byte[] encodedPayload = new byte[0];;
+                            byte[] encodedPayload = new byte[0];
                             encodedPayload = msg.getBytes("UTF-8");
                             MqttMessage message = new MqttMessage(encodedPayload);
                             message.setRetained(true);

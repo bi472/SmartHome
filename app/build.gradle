@@ -37,6 +37,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'commons-codec:commons-codec:1.15'
     implementation 'com.ibm.icu:icu4j:61.1'
     implementation 'com.google.android.libraries.places:places:2.5.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'

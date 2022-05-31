@@ -16,6 +16,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class LightMenu extends AppCompatActivity {
     final String LOG_TAG = "myLogs";
@@ -24,6 +27,7 @@ public class LightMenu extends AppCompatActivity {
     SQLiteDatabase db;
 
     ArrayList<Switches> switchesArrayList = new ArrayList<Switches>();
+    Map<String, String> switchesMap = new HashMap<>();
     SwitchesAdapter.OnSwitchClickListener switchClickListener;
     RecyclerView recyclerView;
     SwitchesAdapter adapter;
@@ -31,12 +35,11 @@ public class LightMenu extends AppCompatActivity {
     MQTTHelperPublish mqttHelperPublish;
     MQTTHelperSubscribe mqttHelperSubscribe;
 
-    public void setConditionAdapter(String room_name, int position, boolean condition){
+    public void setConditionAdapter(int position, boolean condition){
         switchesArrayList.get(position).setCondition(condition);
         adapter = new SwitchesAdapter(switchClickListener, getApplicationContext(), switchesArrayList);
         // устанавливаем для списка адаптер
         recyclerView.setAdapter(adapter);
-        queryChange(room_name, "on");
     }
 
     public String queryCheck(String name, String column){
@@ -64,20 +67,30 @@ public class LightMenu extends AppCompatActivity {
         return check;
     }
 
-    public void queryChange(String room_name, String condition){
-        db = dbHelper.open();
-        ContentValues cv = new ContentValues();
-        cv.put(dbHelper.COLUMN_NAME_NAME_SWITCH, room_name);
-        cv.put(dbHelper.COLUMN_NAME_CONDITION, condition);
-        db.update(dbHelper.TABLE_NAME_SWITCHES,
-                cv,
-                dbHelper.COLUMN_NAME_NAME_SWITCH + "=?",
-                new String[]{room_name}
-        );
-
-        Log.d(LOG_TAG, room_name + " is" + condition);
-
-        dbHelper.close();
+    public void queryCheck(){
+        String check = null;
+        try {
+            db = dbHelper.open();
+            Cursor cursor = db.query(
+                    dbHelper.TABLE_NAME_SWITCHES,   // таблица
+                    new String[]{"name_switch", "subscriptionTopic"},            // столбцы
+                    null,                  // столбцы для условия WHERE
+                    null,                  // значения для условия WHERE
+                    null,                  // Don't group the rows
+                    null,                  // Don't filter by row groups
+                    null);                   // порядок сортировк
+            int i = 0;
+            Log.i("Количество строк", String.valueOf(cursor.getCount()));
+            while (cursor.moveToNext()) {
+                switchesMap.put(cursor.getString(cursor.getColumnIndex("name_switch")), cursor.getString(cursor.getColumnIndex("subscriptionTopic")));
+                Log.i("Записи в БД", cursor.getString(cursor.getColumnIndex("name_switch")) +": "+ cursor.getString(cursor.getColumnIndex("subscriptionTopic")));
+                i++;
+            }
+            cursor.close();
+            dbHelper.close();
+        }catch (Exception exception){
+            Log.i("Запрос к БД" , exception.getMessage());
+        }
     }
 
     @Override
@@ -86,6 +99,8 @@ public class LightMenu extends AppCompatActivity {
         setContentView(R.layout.activity_light_menu);
 
         dbHelper = new DBHelper(this);
+
+        queryCheck();
 
         setInitialData();
         recyclerView = findViewById(R.id.list);
@@ -99,10 +114,16 @@ public class LightMenu extends AppCompatActivity {
     }
 
     private void setInitialData() {
-        switchesArrayList.add(new Switches("Living", R.drawable.gostinaya, false));
-        subscribe("Living", queryCheck("Living", "subscriptionTopic"), "living_relay_subscribe", 0);
-        switchesArrayList.add(new Switches("Monitors", R.drawable.prihozhaya, false));
-        subscribe("Monitors", queryCheck("Monitors", "subscriptionTopic"), "monitors_relay_subscribe", 1);
+        int i =0;
+        for(Map.Entry<String, String> entry: switchesMap.entrySet()) {
+            // get key
+            String key = entry.getKey();
+            // get value
+            String value = entry.getValue();
+            switchesArrayList.add(new Switches(key, R.drawable.gostinaya, false));
+            subscribe("Living", queryCheck(key, "subscriptionTopic"), value + "_subscribe", i);
+            i++;
+        }
     }
 
     private void startMqtt(String subscriptionTopic, String clientID) {
@@ -127,10 +148,10 @@ public class LightMenu extends AppCompatActivity {
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                 Log.w("Debug",mqttMessage.toString());
                 if (mqttMessage.toString().contains("ON")) {
-                    setConditionAdapter(room_name, position, true);
+                    setConditionAdapter(position, true);
                 }
                 else if(mqttMessage.toString().contains("OFF")){
-                    setConditionAdapter(room_name, position, false);
+                    setConditionAdapter(position, false);
                 };
             }
 
@@ -139,15 +160,5 @@ public class LightMenu extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        try {
-            mqttHelperSubscribe.mqttAndroidClient.disconnect();
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
     }
 }

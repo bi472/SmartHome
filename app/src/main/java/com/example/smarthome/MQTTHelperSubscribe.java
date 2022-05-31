@@ -48,7 +48,6 @@ public class MQTTHelperSubscribe {
             }
         });
         connect(subscriptionTopic);
-
     }
 
     public void setCallback(MqttCallbackExtended callback) {
@@ -103,6 +102,26 @@ public class MQTTHelperSubscribe {
         } catch (MqttException ex) {
             System.err.println("Exception whilst subscribing");
             ex.printStackTrace();
+        }
+    }
+
+    public void disconnect(Context context, String clientId) {
+        try {
+            mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
+            IMqttToken mqttToken = mqttAndroidClient.disconnect();
+            mqttToken.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken iMqttToken) {
+                    Log.d("TAG", "Successfully disconnected");
+                }
+
+                @Override
+                public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
+                    Log.d("TAG", "Failed to disconnected " + throwable.toString());
+                }
+            });
+        }catch (MqttException mqttException){
+            Log.i("Disconnect", mqttException.toString());
         }
     }
 }
