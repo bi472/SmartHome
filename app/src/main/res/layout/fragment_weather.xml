@@ -13,7 +13,7 @@
         android:indeterminate="true"
         android:outlineAmbientShadowColor="@color/white"
         android:outlineSpotShadowColor="@color/white"
-        android:theme="@style/CircularProgress"/>
+        android:theme="@style/CircularProgress" />
 
     <TextView
         android:id="@+id/city_field"
@@ -98,7 +98,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/updated_field"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="-35dp"
+        android:layout_marginBottom="-40dp"
         android:shadowColor="@color/quantum_black_100"
         android:shadowDx="3"
         android:shadowDy="3"
@@ -146,7 +146,6 @@
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="10"
-        android:text="Температура:"
         android:textColor="@color/white"
         android:textSize="15sp" />
 
@@ -161,7 +160,6 @@
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="10"
-        android:text="Влажность:"
         android:textColor="@color/white"
         android:textSize="15sp" />
 
@@ -177,7 +175,6 @@
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="10"
-        android:text="Обновлено в"
         android:textColor="@color/white"
         android:textSize="20sp" />
 

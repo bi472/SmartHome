@@ -121,7 +121,7 @@ public class LightMenu extends AppCompatActivity {
             // get value
             String value = entry.getValue();
             switchesArrayList.add(new Switches(key, R.drawable.gostinaya, false));
-            subscribe("Living", queryCheck(key, "subscriptionTopic"), value + "_subscribe", i);
+            subscribe(key, queryCheck(key, "subscriptionTopic"), value + "_subscribe", i);
             i++;
         }
     }

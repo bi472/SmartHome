@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Weather extends AppCompatActivity {
 
@@ -66,7 +67,7 @@ public class Weather extends AppCompatActivity {
             changeCity(String.valueOf(lat), String.valueOf(lon));
         }
         else {
-            Log.i("Сообщение с координатами: ", "Не попал");
+            Toast.makeText(getApplicationContext(), "Данные о местположении не изменились", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -78,6 +79,9 @@ public class Weather extends AppCompatActivity {
         {
             getCoordinates();
         }
+        else if (requestCode == 100 && grantResults[0] == RESULT_CANCELED){
+            Toast.makeText(getApplicationContext(), "Пожалуйста, предоставьте разрешение", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void changeCity(String Lat, String Lon){
@@ -86,5 +90,6 @@ public class Weather extends AppCompatActivity {
         wf.changeCity(Lat, Lon);
         new Preferences(this).setLat(Lat);
         new Preferences(this).setLon(Lon);
+        Toast.makeText(getApplicationContext(), "Данные о местположении изменены", Toast.LENGTH_SHORT).show();
     }
 }

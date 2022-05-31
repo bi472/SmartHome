@@ -181,8 +181,8 @@ public class WeatherFragment extends Fragment {
             myCal.setTime(date);
 
             updatedField.setText(myCal.get(Calendar.DAY_OF_MONTH) +
-                    " " + myCal.getDisplayName(Calendar.MONTH, Calendar.LONG_FORMAT, new Locale("ru")) +
-                    ", " + myCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG_FORMAT, new Locale("ru")));
+                    " " + myCal.getDisplayName(Calendar.MONTH, Calendar.LONG_FORMAT, Locale.getDefault()) +
+                    ", " + myCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG_FORMAT, Locale.getDefault()));
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             String time = simpleDateFormat.format(myCal.getTime());

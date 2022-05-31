@@ -17,7 +17,7 @@ public class Preferences {
     String getHum() {return prefs.getString("Humidity", "0");}
     String getTime() {return prefs.getString("Time", "0");}
 
-    String getMQTTServer() {return  prefs.getString("MQTTServer", "m9.wqtt.ru:12488");}
+    String getMQTTServer() {return  prefs.getString("MQTTServer", "m9.wqtt.ru");}
     String getPort(){return  prefs.getString("Port", "12488");}
     String getUsername(){return prefs.getString("User", "u_Q8U3S8");}
     String getPassword(){return prefs.getString("Password", "JPreADjI");}

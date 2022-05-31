@@ -2,6 +2,7 @@ package com.example.smarthome;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -47,14 +48,14 @@ public class MQTTHelperSubscribe {
 
             }
         });
-        connect(subscriptionTopic);
+        connect(subscriptionTopic, context);
     }
 
     public void setCallback(MqttCallbackExtended callback) {
         mqttAndroidClient.setCallback(callback);
     }
 
-    private void connect(final String subscriptionTopic){
+    private void connect(final String subscriptionTopic, Context context){
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
@@ -77,6 +78,7 @@ public class MQTTHelperSubscribe {
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                         Log.w("Mqtt", "Failed to connect to: " + serverUri + exception.toString());
+                        Toast.makeText(context, "Не удалось соедениться с сервером. Пожалуйста, включите интернет и перезагрузите приложение.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
