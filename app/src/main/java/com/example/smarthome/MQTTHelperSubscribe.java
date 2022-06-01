@@ -72,13 +72,12 @@ public class MQTTHelperSubscribe {
                             disconnectedBufferOptions.setPersistBuffer(false);
                             disconnectedBufferOptions.setDeleteOldestMessages(false);
                             mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
-                            subscribeToTopic(subscriptionTopic);
+                            subscribeToTopic(subscriptionTopic, context);
                     }
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                         Log.w("Mqtt", "Failed to connect to: " + serverUri + exception.toString());
-                        Toast.makeText(context, "Не удалось соедениться с сервером. Пожалуйста, включите интернет и перезагрузите приложение.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -87,7 +86,7 @@ public class MQTTHelperSubscribe {
         }
     }
 
-    private void subscribeToTopic(String subscriptionTopic) {
+    private void subscribeToTopic(String subscriptionTopic, Context context) {
         try {
             mqttAndroidClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
                 @Override
@@ -98,32 +97,13 @@ public class MQTTHelperSubscribe {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.w("Mqtt", "Subscribed fail!");
+                    Toast.makeText(context, "Не удалось соедениться с сервером. Пожалуйста, включите интернет и перезагрузите приложение.", Toast.LENGTH_SHORT).show();
                 }
             });
 
         } catch (MqttException ex) {
             System.err.println("Exception whilst subscribing");
             ex.printStackTrace();
-        }
-    }
-
-    public void disconnect(Context context, String clientId) {
-        try {
-            mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
-            IMqttToken mqttToken = mqttAndroidClient.disconnect();
-            mqttToken.setActionCallback(new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken iMqttToken) {
-                    Log.d("TAG", "Successfully disconnected");
-                }
-
-                @Override
-                public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                    Log.d("TAG", "Failed to disconnected " + throwable.toString());
-                }
-            });
-        }catch (MqttException mqttException){
-            Log.i("Disconnect", mqttException.toString());
         }
     }
 }

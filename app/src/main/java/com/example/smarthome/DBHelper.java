@@ -36,16 +36,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static String DB_PATH; // полный путь к базе данных
     private static final int SCHEMA = 1; // версия базы данных
-    static final String TABLE = "users"; // название таблицы в бд
 
 
     private static final String DATABASE_NAME = "smart_home.db";
     public static final String TABLE_NAME_SWITCHES = "switches";
-    public static final String COLUMN_NAME_CONDITION = "condition";
-    public static final String COLUMN_NAME_NAME_SWITCH = "name_switch";
     public static final String TABLE_NAME_USERS = "users";
-    public static final String TABLE_NAME_CAMERA_HISTORY = "camera_history";
-    public static final String TABLE_NAME_COUNTERS = "counters";
     public static final String TABLE_NAME_CAMERA = "camera";
 
     public DBHelper(Context context) {

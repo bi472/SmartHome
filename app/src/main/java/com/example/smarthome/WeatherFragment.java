@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class WeatherFragment extends Fragment {
     TextView cityField;
@@ -87,7 +88,7 @@ public class WeatherFragment extends Fragment {
     }
 
     private void startMqtt(){
-        mqttHelperSubscribe = new MQTTHelperSubscribe(getActivity(), "tele/relay_with_temp/SENSOR", "temperature");
+        mqttHelperSubscribe = new MQTTHelperSubscribe(getActivity(), "tele/relay_with_temp/SENSOR", "temperature_" + new Random().nextInt());
         mqttHelperSubscribe.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {

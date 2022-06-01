@@ -2,12 +2,17 @@ package com.example.smarthome;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
 public class GPSTracker implements LocationListener {
@@ -30,9 +35,7 @@ public class GPSTracker implements LocationListener {
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,10, 10, this);
             Location l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             return l;
-        }else {
-            Toast.makeText(context,"Пожалуйста, включите GPS!", Toast.LENGTH_LONG).show();
-        }
+        }else
         return null;
     }
 

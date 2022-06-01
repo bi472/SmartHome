@@ -3,26 +3,24 @@ package com.example.smarthome;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 public class LightMenu extends AppCompatActivity {
-    final String LOG_TAG = "myLogs";
-
+    
     DBHelper dbHelper;
     SQLiteDatabase db;
 
@@ -68,7 +66,6 @@ public class LightMenu extends AppCompatActivity {
     }
 
     public void queryCheck(){
-        String check = null;
         try {
             db = dbHelper.open();
             Cursor cursor = db.query(
@@ -106,7 +103,7 @@ public class LightMenu extends AppCompatActivity {
         recyclerView = findViewById(R.id.list);
         recyclerView.setHasFixedSize(true);
 
-        switchClickListener = (switches, position) -> startMqtt(queryCheck(switches.getName(), "subscriptionTopic"), switches.getName() + "_relay_publish");
+        switchClickListener = (switches, position) -> startMqtt(queryCheck(switches.getName(), "subscriptionTopic"), switches.getName() + "_relay_publish_" + new Random().nextInt());
 
         adapter = new SwitchesAdapter(switchClickListener, this, switchesArrayList);
         // устанавливаем для списка адаптер
@@ -115,23 +112,25 @@ public class LightMenu extends AppCompatActivity {
 
     private void setInitialData() {
         int i =0;
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);;
         for(Map.Entry<String, String> entry: switchesMap.entrySet()) {
             // get key
             String key = entry.getKey();
             // get value
             String value = entry.getValue();
             switchesArrayList.add(new Switches(key, R.drawable.gostinaya, false));
-            subscribe(key, queryCheck(key, "subscriptionTopic"), value + "_subscribe", i);
+            subscribe(key, queryCheck(key, "subscriptionTopic"), value + "_subscribe_" + new Random().nextInt(), i);
             i++;
         }
     }
 
     private void startMqtt(String subscriptionTopic, String clientID) {
         mqttHelperPublish = new MQTTHelperPublish(getApplicationContext(), "Toggle", "cmnd/"+ subscriptionTopic+"/POWER", clientID);
+        Log.i("MSG", clientID);
     }
 
     private void subscribe(final String room_name, String subscriptionTopic, String clientID, int position){
-        Log.i("Топик для подписки " + room_name, subscriptionTopic);
+        Log.i("MSG", clientID);
         mqttHelperSubscribe = new MQTTHelperSubscribe(getApplicationContext(), "stat/"+ subscriptionTopic + "/POWER", clientID);
         mqttHelperPublish = new MQTTHelperPublish(getApplicationContext(), "", "cmnd/"+ subscriptionTopic+"/POWER", clientID + "_power_publish");
         mqttHelperSubscribe.setCallback(new MqttCallbackExtended() {
