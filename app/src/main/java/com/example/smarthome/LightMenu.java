@@ -32,6 +32,9 @@ public class LightMenu extends AppCompatActivity {
 
     MQTTHelperPublish mqttHelperPublish;
     MQTTHelperSubscribe mqttHelperSubscribe;
+    String serverUri;
+    String username;
+    String password;
 
     public void setConditionAdapter(int position, boolean condition){
         switchesArrayList.get(position).setCondition(condition);
@@ -95,6 +98,10 @@ public class LightMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_menu);
 
+        serverUri = "tcp://" + new Preferences(LightMenu.this).getMQTTServer() + ":" + new Preferences(LightMenu.this).getPort();
+        username = new Preferences(LightMenu.this).getUsername();
+        password = new Preferences(LightMenu.this).getPassword();
+
         dbHelper = new DBHelper(this);
 
         queryCheck();
@@ -125,14 +132,17 @@ public class LightMenu extends AppCompatActivity {
     }
 
     private void startMqtt(String subscriptionTopic, String clientID) {
-        mqttHelperPublish = new MQTTHelperPublish(getApplicationContext(), "Toggle", "cmnd/"+ subscriptionTopic+"/POWER", clientID);
+        mqttHelperPublish = new MQTTHelperPublish(getApplicationContext(), "Toggle", "cmnd/"+ subscriptionTopic+"/POWER", clientID,
+                serverUri, username, password);
         Log.i("MSG", clientID);
     }
 
     private void subscribe(final String room_name, String subscriptionTopic, String clientID, int position){
         Log.i("MSG", clientID);
-        mqttHelperSubscribe = new MQTTHelperSubscribe(getApplicationContext(), "stat/"+ subscriptionTopic + "/POWER", clientID);
-        mqttHelperPublish = new MQTTHelperPublish(getApplicationContext(), "", "cmnd/"+ subscriptionTopic+"/POWER", clientID + "_power_publish");
+        mqttHelperSubscribe = new MQTTHelperSubscribe(getApplicationContext(), "stat/"+ subscriptionTopic + "/POWER", clientID,
+                serverUri, username, password);
+        mqttHelperPublish = new MQTTHelperPublish(getApplicationContext(), "", "cmnd/"+ subscriptionTopic+"/POWER", clientID + "_power_publish",
+                serverUri, username, password);
         mqttHelperSubscribe.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {

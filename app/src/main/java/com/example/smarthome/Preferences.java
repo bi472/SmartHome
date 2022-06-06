@@ -1,5 +1,6 @@
 package com.example.smarthome;
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Preferences {
@@ -7,7 +8,7 @@ public class Preferences {
     SharedPreferences prefs;
 
     public Preferences(Activity activity){
-        prefs = activity.getPreferences(Activity.MODE_PRIVATE);
+        prefs = activity.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
     }
 
     // Значение по умолчанию если пользователь не указал город

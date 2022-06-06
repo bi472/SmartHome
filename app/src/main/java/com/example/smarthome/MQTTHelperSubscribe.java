@@ -21,11 +21,7 @@ import java.io.UnsupportedEncodingException;
 public class MQTTHelperSubscribe {
     public MqttAndroidClient mqttAndroidClient;
 
-    final String serverUri = "tcp://m9.wqtt.ru:12488";
-    final String username = "u_Q8U3S8";
-    final String password = "JPreADjI";
-
-    public MQTTHelperSubscribe(Context context, String  subscriptionTopic, String clientId){
+    public MQTTHelperSubscribe(Context context, String  subscriptionTopic, String clientId, String serverUri, String username, String password){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -48,14 +44,14 @@ public class MQTTHelperSubscribe {
 
             }
         });
-        connect(subscriptionTopic, context);
+        connect(subscriptionTopic, context, username, password);
     }
 
     public void setCallback(MqttCallbackExtended callback) {
         mqttAndroidClient.setCallback(callback);
     }
 
-    private void connect(final String subscriptionTopic, Context context){
+    private void connect(final String subscriptionTopic, Context context, String username, String password){
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
@@ -77,7 +73,8 @@ public class MQTTHelperSubscribe {
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                        Log.w("Mqtt", "Failed to connect to: " + serverUri + exception.toString());
+                        Log.w("Mqtt", "Failed to connect.");
+                        Toast.makeText(context, "Не удалось соедениться с сервером. Пожалуйста, проверьте правильность настроек MQTT сервера.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -97,7 +94,6 @@ public class MQTTHelperSubscribe {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.w("Mqtt", "Subscribed fail!");
-                    Toast.makeText(context, "Не удалось соедениться с сервером. Пожалуйста, включите интернет и перезагрузите приложение.", Toast.LENGTH_SHORT).show();
                 }
             });
 

@@ -2,6 +2,7 @@ package com.example.smarthome;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
@@ -18,12 +19,7 @@ import java.io.UnsupportedEncodingException;
 public class MQTTHelperPublish{
     public MqttAndroidClient mqttAndroidClient;
 
-    final String serverUri = "tcp://m9.wqtt.ru:12488";
-
-    final String username = "u_Q8U3S8";
-    final String password = "JPreADjI";
-
-    public MQTTHelperPublish(Context context, String msg, String publishTopic, String clientId){
+    public MQTTHelperPublish(Context context, String msg, String publishTopic, String clientId, String serverUri, String username, String password){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -46,11 +42,11 @@ public class MQTTHelperPublish{
 
             }
         });
-        connect(msg, publishTopic);
+        connect(msg, publishTopic, username, password, context);
 
     }
 
-    private void connect(final String msg, final String publishTopic){
+    private void connect(final String msg, final String publishTopic, final String username, final String password, Context context){
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
@@ -77,7 +73,8 @@ public class MQTTHelperPublish{
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.w("Mqtt", "Failed to connect to: " + serverUri + exception.toString());
+                    Log.w("Mqtt", "Failed to connect. ");
+                    Toast.makeText(context, "Не удалось подключиться к серверу. Проверьте правильность настроек MQTT сервера.", Toast.LENGTH_LONG).show();
                 }
             });
 

@@ -49,6 +49,9 @@ public class WeatherFragment extends Fragment {
     ProgressBar progressBar;
 
     MQTTHelperSubscribe mqttHelperSubscribe;
+    String serverUri;
+    String username;
+    String password;
 
     TextView roomTemp;
     TextView roomHum;
@@ -82,13 +85,17 @@ public class WeatherFragment extends Fragment {
         roomHum.setText("Влажность: " + new Preferences(getActivity()).getHum() + " %");
         roomUpdateTime.setText("Обновлено в " + new Preferences(getActivity()).getTime());
 
+        serverUri = "tcp://" + new Preferences(WeatherFragment.this.getActivity()).getMQTTServer() + ":" + new Preferences(WeatherFragment.this.getActivity()).getPort();
+        username  = new Preferences(WeatherFragment.this.getActivity()).getUsername();
+        password = new Preferences(WeatherFragment.this.getActivity()).getPassword();
+
         startMqtt();
 
         return rootView;
     }
 
     private void startMqtt(){
-        mqttHelperSubscribe = new MQTTHelperSubscribe(getActivity(), "tele/relay_with_temp/SENSOR", "temperature_" + new Random().nextInt());
+        mqttHelperSubscribe = new MQTTHelperSubscribe(getActivity(), "tele/relay_with_temp/SENSOR", "temperature_" + new Random().nextInt(), serverUri, username, password);
         mqttHelperSubscribe.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
