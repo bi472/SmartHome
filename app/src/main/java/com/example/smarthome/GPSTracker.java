@@ -35,12 +35,15 @@ public class GPSTracker implements LocationListener {
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,10, 10, this);
             Location l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             return l;
-        }else
-        return null;
+        }else {
+            Toast.makeText(context, "Включите пожалуйста GPS!", Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
     @Override
     public void onLocationChanged(Location location) {
+
     }
 
     @Override

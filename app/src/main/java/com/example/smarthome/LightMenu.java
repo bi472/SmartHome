@@ -119,7 +119,6 @@ public class LightMenu extends AppCompatActivity {
 
     private void setInitialData() {
         int i =0;
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);;
         for(Map.Entry<String, String> entry: switchesMap.entrySet()) {
             // get key
             String key = entry.getKey();

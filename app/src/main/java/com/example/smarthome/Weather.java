@@ -60,14 +60,11 @@ public class Weather extends AppCompatActivity {
     private void getCoordinates() {
         GPSTracker g = new GPSTracker(getApplicationContext()); //создаём трекер
         Location l = g.getLocation(); // получаем координаты
-        if(l != null){
+        if(l != null) {
             double lat = l.getLatitude();  // широта
             double lon = l.getLongitude(); // долгота
-            Log.i("Сообщение с координатами: ", String.valueOf(lat) + ", "+ String.valueOf(lon));
+            Log.i("Сообщение с координатами: ", String.valueOf(lat) + ", " + String.valueOf(lon));
             changeCity(String.valueOf(lat), String.valueOf(lon));
-        }
-        else {
-            Toast.makeText(getApplicationContext(), "Данные о местположении не изменились", Toast.LENGTH_SHORT).show();
         }
     }
 

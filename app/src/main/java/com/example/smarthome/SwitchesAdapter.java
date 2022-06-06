@@ -41,12 +41,7 @@ public class SwitchesAdapter extends RecyclerView.Adapter<SwitchesAdapter.ViewHo
         holder.imageView.setImageResource(state.getFlagResource());
         holder.nameView.setText(state.getName());
         holder.aSwitch.setChecked(state.getCondition());
-        holder.aSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickListener.onSwitchClick(state, position);
-            }
-        });
+        holder.aSwitch.setOnClickListener(view -> onClickListener.onSwitchClick(state, position));
     }
 
     @Override
