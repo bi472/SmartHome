@@ -22,6 +22,6 @@ public class VideoCamera extends AppCompatActivity {
 
         firstCamera.setWebViewClient(new MyWebViewClient());
 
-        firstCamera.loadUrl("https://www.youtube.com/embed/cN1HsJnt-MY");
+        firstCamera.loadUrl("https://www.youtube.com/embed/vlHdLOeiOV0");
     }
 }
